@@ -1,4 +1,7 @@
+import 'dart:convert';
 import 'dart:math' as math;
+
+import 'package:crypto/crypto.dart';
 
 import 'package:flutter/material.dart';
 
@@ -19,9 +22,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
 
-  Map<String, dynamic>? _user;
   String? _message;
-  bool _isLoadingUser = false;
   bool _isLoggingIn = false;
   bool _isExiting = false;
   bool _loginPressed = false;
@@ -43,11 +44,6 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
     duration: const Duration(seconds: 7),
   );
 
-  Map<String, dynamic>? get _loginDetails {
-    final dynamic login = _user?['login'];
-    return login is Map<String, dynamic> ? login : null;
-  }
-
   @override
   void initState() {
     super.initState();
@@ -57,7 +53,6 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
     Future<void>.delayed(const Duration(milliseconds: 250), () {
       if (mounted) _sheet.forward();
     });
-    _loadUser();
   }
 
   @override
@@ -71,101 +66,72 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
     super.dispose();
   }
 
-  Future<void> _loadUser() async {
-    setState(() {
-      _isLoadingUser = true;
-      _message = null;
-    });
-
-    try {
-      final user = await (widget.authApi ?? AuthApi()).fetchRandomUser();
-      if (!mounted) return;
-      setState(() {
-        _user = user;
-      });
-    } on Exception catch (error) {
-      if (!mounted) return;
-      setState(() {
-        _user = null;
-        _message = 'Gagal memuat user: $error';
-      });
-    } finally {
-      if (mounted) {
-        setState(() {
-          _isLoadingUser = false;
-        });
-      }
-    }
-  }
-
   Future<void> _login() async {
-    if (_isLoggingIn || _isLoadingUser) return;
-
-    final login = _loginDetails;
-    final dynamic username = login?['username'];
-    final dynamic password = login?['password'];
-
-    if (username is! String || password is! String) {
-      setState(() {
-        _message = 'User belum dimuat. Silakan coba lagi.';
-      });
+    if (_isLoggingIn) return;
+    final npm = _usernameController.text.trim();
+    final password = _passwordController.text;
+    if (npm.isEmpty || password.isEmpty) {
+      setState(() => _message = 'NPM dan password wajib diisi.');
       return;
     }
-
-    if (_usernameController.text == username &&
-        _passwordController.text == password) {
+    setState(() {
+      _isLoggingIn = true;
+      _message = null;
+    });
+    try {
+      final passwordSha1 = sha1.convert(utf8.encode(password)).toString();
+      final isValid = await (widget.authApi ?? AuthApi()).authenticate(
+        npm: npm,
+        passwordSha1: passwordSha1,
+      );
+      if (!mounted) return;
+      if (!isValid) {
+        setState(() => _message = 'NPM atau password salah.');
+        return;
+      }
       final bool disabled = MediaQuery.of(context).disableAnimations;
-      setState(() => _isLoggingIn = true);
       if (!disabled) {
         await Future<void>.delayed(const Duration(milliseconds: 800));
         if (!mounted) return;
-        setState(() {
-          _isLoggingIn = false;
-          _isExiting = true;
-        });
+        setState(() => _isExiting = true);
         await Future<void>.delayed(const Duration(milliseconds: 300));
         if (!mounted) return;
       }
-
       Navigator.of(context).pushReplacement(
         PageRouteBuilder<void>(
           transitionDuration: disabled
               ? Duration.zero
               : const Duration(milliseconds: 700),
           pageBuilder: (_, _, _) => const WelcomeScreen(),
-          transitionsBuilder:
-              (
-                BuildContext context,
-                Animation<double> animation,
-                Animation<double> secondaryAnimation,
-                Widget child,
-              ) {
-                if (disabled) return child;
-                final CurvedAnimation curved = CurvedAnimation(
-                  parent: animation,
-                  curve: Curves.easeOutCubic,
-                );
-                return FadeTransition(
-                  opacity: curved,
-                  child: ScaleTransition(
-                    scale: Tween<double>(begin: 0.96, end: 1).animate(curved),
-                    child: child,
-                  ),
-                );
-              },
+          transitionsBuilder: (
+            BuildContext context,
+            Animation<double> animation,
+            Animation<double> secondaryAnimation,
+            Widget child,
+          ) {
+            if (disabled) return child;
+            final curved = CurvedAnimation(
+              parent: animation,
+              curve: Curves.easeOutCubic,
+            );
+            return FadeTransition(
+              opacity: curved,
+              child: ScaleTransition(
+                scale: Tween<double>(begin: 0.96, end: 1).animate(curved),
+                child: child,
+              ),
+            );
+          },
         ),
       );
-      return;
+    } on Exception {
+      if (mounted) {
+        setState(() => _message =
+            'Login gagal terhubung ke server. Periksa koneksi lalu coba lagi.');
+      }
+    } finally {
+      if (mounted) setState(() => _isLoggingIn = false);
     }
-
-    setState(() {
-      _message = 'Username atau password salah';
-    });
-  }
-
-  String _credential(String key) {
-    final dynamic value = _loginDetails?[key];
-    return value is String ? value : '-';
   }
 
   @override
@@ -247,7 +213,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
 
   Widget _buildLoginButton() {
     return ElevatedButton(
-      onPressed: _isLoadingUser || _isLoggingIn ? null : _login,
+      onPressed: _isLoggingIn ? null : _login,
       style: ElevatedButton.styleFrom(
         backgroundColor: Colors.transparent,
         disabledBackgroundColor: Colors.transparent,
@@ -466,14 +432,14 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
               Text('Selamat datang kembali', style: AppText.sheetTitle),
               const SizedBox(height: 4),
               Text(
-                'Masuk dengan username dan password dari user acak.',
+                'Masuk menggunakan NPM dan password akun mahasiswa.',
                 style: AppText.body.copyWith(color: AppColors.textSecondary),
               ),
               const SizedBox(height: 20),
               _AuthField(
                 controller: _usernameController,
                 icon: Icons.person_outline,
-                hint: 'Username',
+                hint: 'NPM',
               ),
               const SizedBox(height: 14),
               _AuthField(
@@ -487,50 +453,14 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                 Text(
                   _message!,
                   style: AppText.body.copyWith(
-                    color: _user == null ? AppColors.dot : AppColors.navy,
+                    color: AppColors.dot,
                   ),
                 ),
               ],
               const SizedBox(height: 22),
               _buildLoginButton(),
               const SizedBox(height: 18),
-              Container(
-                width: double.infinity,
-                padding: const EdgeInsets.all(14),
-                decoration: BoxDecoration(
-                  color: AppColors.bg,
-                  borderRadius: BorderRadius.circular(16),
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text('Akun untuk testing', style: AppText.listTitle),
-                    const SizedBox(height: 4),
-                    Text(
-                      'Username: ${_credential('username')}',
-                      style: AppText.body.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    Text(
-                      'Password: ${_credential('password')}',
-                      style: AppText.body.copyWith(
-                        color: AppColors.textSecondary,
-                      ),
-                    ),
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: TextButton(
-                        onPressed: _isLoadingUser ? null : _loadUser,
-                        child: Text(
-                          _isLoadingUser ? 'Memuat...' : 'Ganti User Acak',
-                          style: AppText.body.copyWith(color: AppColors.navy),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+
             ],
           ),
         ),
