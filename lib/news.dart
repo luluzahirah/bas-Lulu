@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 import 'theme.dart';
-import 'welcome.dart';
 import 'widgets.dart';
 
 class _NewsItem {
@@ -165,7 +164,9 @@ class _NewsScreenState extends State<NewsScreen> {
 
   Widget _buildRow(_NewsItem item) {
     return ListRow(
-      onTap: () => ToastScope.of(context).showToast('${item.title} dibuka'),
+      onTap: () => ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('${item.title} dibuka'))),
       leading: Container(
         width: 60,
         height: 60,
@@ -186,8 +187,7 @@ class _NewsScreenState extends State<NewsScreen> {
           Row(
             children: <Widget>[
               Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
+                padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 3),
                 decoration: BoxDecoration(
                   color: _tagColor(item.category),
                   borderRadius: BorderRadius.circular(8),
@@ -219,11 +219,7 @@ class _NewsScreenState extends State<NewsScreen> {
 }
 
 class _Chip extends StatelessWidget {
-  const _Chip({
-    required this.label,
-    required this.active,
-    required this.onTap,
-  });
+  const _Chip({required this.label, required this.active, required this.onTap});
 
   final String label;
   final bool active;

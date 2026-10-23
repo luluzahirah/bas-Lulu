@@ -2,6 +2,7 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
+import 'api/auth_api.dart';
 import 'theme.dart';
 import 'welcome.dart';
 import 'widgets.dart';
@@ -77,24 +78,45 @@ class _LoginScreenState extends State<LoginScreen>
   }
 
   void _goToHome(bool disabled) {
+    // Login.dart adalah halaman lama (legacy). Gunakan auth_page.dart untuk
+    // autentikasi nyata via API. Di sini diteruskan dummy user agar kompilasi
+    // tetap valid.
+    const UserAccount dummyUser = UserAccount(
+      npm: '0000000000',
+      passwordSha1: '',
+      name: 'Mahasiswa',
+      prodi: 'Teknologi Rekayasa Multimedia',
+      fakultas: 'Teknik',
+      semester: 1,
+      ipk: 0,
+      sks: 0,
+    );
     Navigator.of(context).pushReplacement(
       PageRouteBuilder<void>(
-        transitionDuration:
-            disabled ? Duration.zero : const Duration(milliseconds: 700),
-        pageBuilder: (_, _, _) => const WelcomeScreen(),
-        transitionsBuilder: (BuildContext context, Animation<double> animation,
-            Animation<double> secondary, Widget child) {
-          if (disabled) return child;
-          final CurvedAnimation curved =
-              CurvedAnimation(parent: animation, curve: Curves.easeOutCubic);
-          return FadeTransition(
-            opacity: curved,
-            child: ScaleTransition(
-              scale: Tween<double>(begin: 0.96, end: 1).animate(curved),
-              child: child,
-            ),
-          );
-        },
+        transitionDuration: disabled
+            ? Duration.zero
+            : const Duration(milliseconds: 700),
+        pageBuilder: (_, _, _) => const WelcomeScreen(user: dummyUser),
+        transitionsBuilder:
+            (
+              BuildContext context,
+              Animation<double> animation,
+              Animation<double> secondary,
+              Widget child,
+            ) {
+              if (disabled) return child;
+              final CurvedAnimation curved = CurvedAnimation(
+                parent: animation,
+                curve: Curves.easeOutCubic,
+              );
+              return FadeTransition(
+                opacity: curved,
+                child: ScaleTransition(
+                  scale: Tween<double>(begin: 0.96, end: 1).animate(curved),
+                  child: child,
+                ),
+              );
+            },
       ),
     );
   }
@@ -105,12 +127,12 @@ class _LoginScreenState extends State<LoginScreen>
     return Scaffold(
       body: AnimatedOpacity(
         opacity: _exiting ? 0 : 1,
-        duration:
-            disabled ? Duration.zero : const Duration(milliseconds: 300),
+        duration: disabled ? Duration.zero : const Duration(milliseconds: 300),
         child: AnimatedSlide(
           offset: _exiting ? const Offset(0, -0.15) : Offset.zero,
-          duration:
-              disabled ? Duration.zero : const Duration(milliseconds: 300),
+          duration: disabled
+              ? Duration.zero
+              : const Duration(milliseconds: 300),
           child: _buildContent(),
         ),
       ),
@@ -132,8 +154,7 @@ class _LoginScreenState extends State<LoginScreen>
             ),
           ),
         ),
-        _blob(const Color(0xFF8B5CF6), 150, 0.35, 0,
-            top: -30, left: -40),
+        _blob(const Color(0xFF8B5CF6), 150, 0.35, 0, top: -30, left: -40),
         _blob(const Color(0xFF2DD4BF), 110, 0.28, 1, top: 30, right: -30),
         _blob(const Color(0xFFFF9A6B), 90, 0.30, 2, top: 210, left: 120),
         Column(
@@ -195,8 +216,9 @@ class _LoginScreenState extends State<LoginScreen>
       animation: Listenable.merge(<Listenable>[_logo, _float]),
       builder: (BuildContext context, _) {
         final bool disabled = MediaQuery.of(context).disableAnimations;
-        final double scale =
-            disabled ? 1 : Curves.elasticOut.transform(_logo.value);
+        final double scale = disabled
+            ? 1
+            : Curves.elasticOut.transform(_logo.value);
         final double fade = disabled ? 1 : _logo.value;
         final double floatY = disabled ? 0 : -8 * _float.value;
         return Opacity(
@@ -246,7 +268,9 @@ class _LoginScreenState extends State<LoginScreen>
       animation: _sheet,
       builder: (BuildContext context, Widget? child) {
         final bool disabled = MediaQuery.of(context).disableAnimations;
-        final double t = disabled ? 1 : Curves.easeOutCubic.transform(_sheet.value);
+        final double t = disabled
+            ? 1
+            : Curves.easeOutCubic.transform(_sheet.value);
         return Opacity(
           opacity: t,
           child: Transform.translate(

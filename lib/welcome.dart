@@ -1,33 +1,43 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
+import 'akademik.dart';
+import 'api/auth_api.dart';
 import 'home.dart';
-import 'info.dart';
-import 'news.dart';
+import 'jadwal.dart';
+import 'pengumuman.dart';
 import 'profile.dart';
 import 'theme.dart';
 
-/// Memberi akses toast ke seluruh tab.
-class ToastScope extends InheritedWidget {
-  const ToastScope({
+/// Memberi akses navigasi antar-tab dari dalam halaman manapun.
+class NavScope extends InheritedWidget {
+  const NavScope({
     super.key,
-    required this.showToast,
+    required this.goToTab,
+    required this.goToAkademik,
     required super.child,
   });
 
-  final void Function(String message) showToast;
+  final void Function(int tabIndex) goToTab;
+  final void Function(int akademikIndex) goToAkademik;
 
-  static ToastScope of(BuildContext context) {
-    return context.dependOnInheritedWidgetOfExactType<ToastScope>()!;
+  static NavScope? maybeOf(BuildContext context) {
+    return context.dependOnInheritedWidgetOfExactType<NavScope>();
+  }
+
+  static NavScope of(BuildContext context) {
+    final NavScope? scope = maybeOf(context);
+    assert(scope != null, 'NavScope not found in context');
+    return scope!;
   }
 
   @override
-  bool updateShouldNotify(ToastScope oldWidget) => false;
+  bool updateShouldNotify(NavScope oldWidget) => false;
 }
 
 class WelcomeScreen extends StatefulWidget {
-  const WelcomeScreen({super.key});
+  const WelcomeScreen({super.key, required this.user});
+
+  final UserAccount user;
 
   @override
   State<WelcomeScreen> createState() => _WelcomeScreenState();
@@ -35,9 +45,8 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   int _selectedIndex = 0;
-  String? _toast;
-  Timer? _toastTimer;
 
+<<<<<<< HEAD
   static const List<Widget> _pages = <Widget>[
     HomeScreen(),
     InfoScreen(),
@@ -50,39 +59,77 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     (Icons.info_outline, 'Info'),
     (Icons.article_outlined, 'News'),
     (Icons.person_outline, 'Profile'),
+=======
+  // Pending index untuk langsung buka submenu Akademik
+  int? _pendingAkademikIndex;
+
+  static const List<(IconData, String)> _tabs = <(IconData, String)>[
+    (Icons.home_outlined, 'Beranda'),
+    (Icons.calendar_month_outlined, 'Jadwal'),
+    (Icons.school_outlined, 'Akademik'),
+    (Icons.campaign_outlined, 'Pengumuman'),
+    (Icons.person_outline, 'Profil'),
+>>>>>>> f8fc6fe (Revisi)
   ];
 
-  @override
-  void dispose() {
-    _toastTimer?.cancel();
-    super.dispose();
+  void _goToTab(int index) {
+    if (index != _selectedIndex) {
+      setState(() {
+        _selectedIndex = index;
+        _pendingAkademikIndex = null;
+      });
+    }
   }
 
-  void _showToast(String message) {
-    setState(() => _toast = message);
-    _toastTimer?.cancel();
-    _toastTimer = Timer(const Duration(milliseconds: 1400), () {
-      if (mounted) setState(() => _toast = null);
+  void _goToAkademik(int akademikIndex) {
+    setState(() {
+      _selectedIndex = 2;
+      _pendingAkademikIndex = akademikIndex;
     });
+  }
+
+  Widget _buildPage(int index) {
+    switch (index) {
+      case 0:
+        return HomeScreen(user: widget.user);
+      case 1:
+        return const JadwalScreen();
+      case 2:
+        final int? ai = _pendingAkademikIndex;
+        if (_pendingAkademikIndex != null) {
+          _pendingAkademikIndex = null;
+        }
+        return AkademikScreen(initialIndex: ai, user: widget.user);
+      case 3:
+        return const PengumumanScreen();
+      case 4:
+        return ProfileScreen(user: widget.user);
+      default:
+        return HomeScreen(user: widget.user);
+    }
   }
 
   void _select(int index) {
     if (index != _selectedIndex) {
-      setState(() => _selectedIndex = index);
+      setState(() {
+        _selectedIndex = index;
+        _pendingAkademikIndex = null;
+      });
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.bg,
-      body: ToastScope(
-        showToast: _showToast,
-        child: Stack(
+    return NavScope(
+      goToTab: _goToTab,
+      goToAkademik: _goToAkademik,
+      child: Scaffold(
+        backgroundColor: AppColors.bg,
+        body: Stack(
           children: <Widget>[
             Positioned.fill(
               child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 320),
+                duration: const Duration(milliseconds: 280),
                 switchInCurve: Curves.easeOutCubic,
                 switchOutCurve: Curves.easeIn,
                 transitionBuilder: (Widget child, Animation<double> animation) {
@@ -100,52 +147,12 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 },
                 child: KeyedSubtree(
                   key: ValueKey<int>(_selectedIndex),
-                  child: _pages[_selectedIndex],
+                  child: _buildPage(_selectedIndex),
                 ),
               ),
             ),
-            _buildToast(),
-            Positioned(
-              left: 14,
-              right: 14,
-              bottom: 14,
-              child: _buildNav(),
-            ),
+            Positioned(left: 14, right: 14, bottom: 14, child: _buildNav()),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildToast() {
-    final bool show = _toast != null;
-    return Positioned(
-      left: 0,
-      right: 0,
-      bottom: 92,
-      child: IgnorePointer(
-        child: Center(
-          child: AnimatedSlide(
-            offset: show ? Offset.zero : const Offset(0, 0.6),
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeOutCubic,
-            child: AnimatedOpacity(
-              opacity: show ? 1 : 0,
-              duration: const Duration(milliseconds: 300),
-              child: Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18, vertical: 10),
-                decoration: BoxDecoration(
-                  color: AppColors.navy,
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Text(
-                  _toast ?? '',
-                  style: AppText.body.copyWith(color: Colors.white),
-                ),
-              ),
-            ),
-          ),
         ),
       ),
     );
@@ -168,8 +175,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
       ),
       child: LayoutBuilder(
         builder: (BuildContext context, BoxConstraints constraints) {
-          const double activeWeight = 2.5;
-          const double totalWeight = activeWeight + 3;
+          const double activeWeight = 2.4;
+          const double inactiveWeight = 1.0;
+          const double totalWeight = activeWeight + 4 * inactiveWeight;
           final double slot = constraints.maxWidth / totalWeight;
           return Row(
             children: <Widget>[
@@ -178,7 +186,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                   i,
                   _tabs[i].$1,
                   _tabs[i].$2,
-                  _selectedIndex == i ? slot * activeWeight : slot,
+                  _selectedIndex == i
+                      ? slot * activeWeight
+                      : slot * inactiveWeight,
                 ),
             ],
           );
@@ -197,7 +207,7 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
         behavior: HitTestBehavior.opaque,
         onTap: () => _select(index),
         child: AnimatedContainer(
-          duration: const Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 450),
           curve: Curves.easeOutBack,
           width: width,
           height: 48,
@@ -211,11 +221,11 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
             children: <Widget>[
               AnimatedSlide(
                 offset: Offset(0, active ? -5 / 22 : 0),
-                duration: const Duration(milliseconds: 500),
+                duration: const Duration(milliseconds: 450),
                 curve: Curves.easeOutBack,
                 child: AnimatedScale(
                   scale: active ? 1.15 : 1,
-                  duration: const Duration(milliseconds: 500),
+                  duration: const Duration(milliseconds: 450),
                   curve: Curves.easeOutBack,
                   child: Icon(
                     icon,
@@ -225,14 +235,17 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
                 ),
               ),
               if (active) ...<Widget>[
-                const SizedBox(width: 8),
+                const SizedBox(width: 7),
                 Flexible(
                   child: Text(
                     label,
                     maxLines: 1,
                     softWrap: false,
                     overflow: TextOverflow.clip,
-                    style: AppText.navLabel.copyWith(color: Colors.white),
+                    style: AppText.navLabel.copyWith(
+                      color: Colors.white,
+                      fontSize: 12,
+                    ),
                   ),
                 ),
               ],

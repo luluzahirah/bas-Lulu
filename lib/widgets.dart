@@ -78,8 +78,7 @@ class CountUp extends StatefulWidget {
   State<CountUp> createState() => _CountUpState();
 }
 
-class _CountUpState extends State<CountUp>
-    with SingleTickerProviderStateMixin {
+class _CountUpState extends State<CountUp> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(milliseconds: 900),
@@ -97,8 +96,9 @@ class _CountUpState extends State<CountUp>
     return AnimatedBuilder(
       animation: _controller,
       builder: (BuildContext context, _) {
-        final double t =
-            disabled ? 1 : Curves.easeOutCubic.transform(_controller.value);
+        final double t = disabled
+            ? 1
+            : Curves.easeOutCubic.transform(_controller.value);
         final double shown = widget.value * t;
         return Text(
           '${shown.toStringAsFixed(widget.decimals)}${widget.suffix}',
@@ -119,8 +119,7 @@ class GrowBar extends StatefulWidget {
   State<GrowBar> createState() => _GrowBarState();
 }
 
-class _GrowBarState extends State<GrowBar>
-    with SingleTickerProviderStateMixin {
+class _GrowBarState extends State<GrowBar> with SingleTickerProviderStateMixin {
   late final AnimationController _controller = AnimationController(
     vsync: this,
     duration: const Duration(seconds: 1),
@@ -148,8 +147,9 @@ class _GrowBarState extends State<GrowBar>
     return AnimatedBuilder(
       animation: _controller,
       builder: (BuildContext context, _) {
-        final double t =
-            disabled ? 1 : Curves.easeOutCubic.transform(_controller.value);
+        final double t = disabled
+            ? 1
+            : Curves.easeOutCubic.transform(_controller.value);
         return ClipRRect(
           borderRadius: BorderRadius.circular(3),
           child: Container(
@@ -391,7 +391,15 @@ class _DarkHeaderState extends State<DarkHeader>
     super.dispose();
   }
 
-  Widget _decor(int i, Color color, {double? top, double? bottom, double? left, double? right, required double size}) {
+  Widget _decor(
+    int i,
+    Color color, {
+    double? top,
+    double? bottom,
+    double? left,
+    double? right,
+    required double size,
+  }) {
     final double opacity = 0.25 + (i % 3) * 0.05;
     final double phase = i * 0.35;
     return Positioned(
@@ -403,9 +411,7 @@ class _DarkHeaderState extends State<DarkHeader>
         animation: _controller,
         builder: (BuildContext context, _) {
           final bool disabled = MediaQuery.of(context).disableAnimations;
-          final double t = disabled
-              ? 0
-              : (_controller.value + phase) % 1.0;
+          final double t = disabled ? 0 : (_controller.value + phase) % 1.0;
           return Transform.translate(
             offset: Offset(16 * t, 12 * t),
             child: Transform.scale(
@@ -466,8 +472,9 @@ class _DarkHeaderState extends State<DarkHeader>
                   if (widget.subtitle != null)
                     Text(
                       widget.subtitle!,
-                      style: AppText.headerTitle
-                          .copyWith(color: AppColors.periwinkle),
+                      style: AppText.headerTitle.copyWith(
+                        color: AppColors.periwinkle,
+                      ),
                     ),
                   if (widget.title != null && widget.child != null)
                     const SizedBox(height: 16),
@@ -646,7 +653,12 @@ class ListRow extends StatelessWidget {
 }
 
 /// Tile persegi berlatar pastel dengan icon navy.
-Widget pastelTile(IconData icon, int index, {double size = 48, double radius = 16}) {
+Widget pastelTile(
+  IconData icon,
+  int index, {
+  double size = 48,
+  double radius = 16,
+}) {
   return Container(
     width: size,
     height: size,
@@ -729,8 +741,9 @@ class GradientCard extends StatelessWidget {
                           children: <Widget>[
                             Text(
                               title,
-                              style: AppText.cardTitle
-                                  .copyWith(color: Colors.white),
+                              style: AppText.cardTitle.copyWith(
+                                color: Colors.white,
+                              ),
                             ),
                             Text(
                               subtitle,

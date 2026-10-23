@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+import 'api/auth_api.dart';
+import 'pages/auth_page.dart';
 import 'theme.dart';
-import 'welcome.dart';
 import 'widgets.dart';
 
 class ProfileScreen extends StatelessWidget {
-  const ProfileScreen({super.key});
+  const ProfileScreen({super.key, required this.user});
+
+  final UserAccount user;
 
   @override
   Widget build(BuildContext context) {
@@ -13,10 +16,7 @@ class ProfileScreen extends StatelessWidget {
       child: Column(
         children: <Widget>[
           DarkHeader(
-            decorations: const <Color>[
-              Color(0xFF2DD4BF),
-              Color(0xFFFF9A6B),
-            ],
+            decorations: const <Color>[Color(0xFF2DD4BF), Color(0xFFFF9A6B)],
             child: SizedBox(
               width: double.infinity,
               child: Column(
@@ -24,13 +24,18 @@ class ProfileScreen extends StatelessWidget {
                   const _ProfileAvatar(),
                   const SizedBox(height: 14),
                   Text(
-                    'Lulu Zahirah',
+                    user.name,
                     style: AppText.name.copyWith(color: Colors.white),
+                    textAlign: TextAlign.center,
                   ),
                   Text(
-                    'Mahasiswa aktif',
-                    style: AppText.body
-                        .copyWith(color: AppColors.headerSubtitle),
+                    user.prodi,
+                    style: AppText.body.copyWith(
+                      color: AppColors.headerSubtitle,
+                    ),
+                    textAlign: TextAlign.center,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),
@@ -45,8 +50,8 @@ class ProfileScreen extends StatelessWidget {
                 Staggered(
                   index: 1,
                   child: ListRow(
-                    leading: pastelTile(Icons.school_outlined, 1),
-                    body: _rowText('NIM', '24903460015'),
+                    leading: pastelTile(Icons.badge_outlined, 0),
+                    body: _rowText('NPM', user.npm),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -54,27 +59,29 @@ class ProfileScreen extends StatelessWidget {
                   index: 2,
                   child: ListRow(
                     leading: pastelTile(Icons.menu_book_outlined, 2),
-                    body: _rowText('Program studi', 'Teknologi Rekayasa Multimedia'),
+                    body: _rowText('Program Studi', user.prodi),
                   ),
                 ),
                 const SizedBox(height: 10),
                 Staggered(
                   index: 3,
                   child: ListRow(
-                    leading: pastelTile(Icons.mail_outline, 3),
-                    body: _rowText('Email', 'official@pdbi.ac.id'),
+                    leading: pastelTile(Icons.account_balance_outlined, 3),
+                    body: _rowText('Fakultas', user.fakultas),
                   ),
                 ),
+                if (user.email != null && user.email!.isNotEmpty) ...<Widget>[
+                  const SizedBox(height: 10),
+                  Staggered(
+                    index: 4,
+                    child: ListRow(
+                      leading: pastelTile(Icons.mail_outline, 4),
+                      body: _rowText('Email', user.email!),
+                    ),
+                  ),
+                ],
                 const SizedBox(height: 20),
-                Staggered(
-                  index: 4,
-                  child: GradientButton(
-                    title: 'Ubah profil',
-                    subtitle: 'Perbarui data diri',
-                    onTap: () =>
-                        ToastScope.of(context).showToast('Ubah profil dibuka'),
-                  ),
-                ),
+                Staggered(index: 5, child: _LogoutButton(user: user)),
               ],
             ),
           ),
@@ -106,9 +113,11 @@ class ProfileScreen extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          Expanded(child: _stat('Semester', 5)),
-          Expanded(child: _stat('IPK', 3.8, decimals: 1)),
-          Expanded(child: _stat('SKS', 96)),
+          Expanded(
+            child: _stat('Semester', user.semester.toDouble(), decimals: 0),
+          ),
+          Expanded(child: _stat('IPK', user.ipk, decimals: 2)),
+          Expanded(child: _stat('SKS', user.sks.toDouble(), decimals: 0)),
         ],
       ),
     );
@@ -128,6 +137,73 @@ class ProfileScreen extends StatelessWidget {
           style: AppText.caption.copyWith(color: AppColors.textSecondary),
         ),
       ],
+    );
+  }
+}
+
+/// Tombol logout dengan konfirmasi dialog.
+class _LogoutButton extends StatelessWidget {
+  const _LogoutButton({required this.user});
+
+  final UserAccount user;
+
+  Future<void> _confirmLogout(BuildContext context) async {
+    final bool? confirm = await showDialog<bool>(
+      context: context,
+      builder: (BuildContext ctx) => AlertDialog(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
+        title: const Text('Keluar'),
+        content: Text(
+          'Apakah kamu yakin ingin keluar dari akun ${user.name}?',
+          style: AppText.body,
+        ),
+        actions: <Widget>[
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, false),
+            child: const Text('Batal'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(ctx, true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.dot),
+            child: const Text('Keluar'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirm == true && context.mounted) {
+      // Hapus semua route dan kembali ke halaman login
+      Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute<void>(builder: (_) => const AuthPage()),
+        (Route<dynamic> route) => false,
+      );
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () => _confirmLogout(context),
+      child: Container(
+        height: 56,
+        padding: const EdgeInsets.symmetric(horizontal: 22),
+        decoration: BoxDecoration(
+          color: const Color(0xFFFFEEF0),
+          borderRadius: BorderRadius.circular(AppRadius.button),
+          border: Border.all(color: AppColors.dot.withValues(alpha: 0.3)),
+        ),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            const Icon(Icons.logout_outlined, size: 20, color: AppColors.dot),
+            const SizedBox(width: 10),
+            Text(
+              'Keluar dari akun',
+              style: AppText.cardTitle.copyWith(color: AppColors.dot),
+            ),
+          ],
+        ),
+      ),
     );
   }
 }
@@ -169,8 +245,9 @@ class _ProfileAvatarState extends State<_ProfileAvatar>
   @override
   Widget build(BuildContext context) {
     final bool disabled = MediaQuery.of(context).disableAnimations;
-    final double scale =
-        disabled ? 1 : Curves.elasticOut.transform(_enter.value);
+    final double scale = disabled
+        ? 1
+        : Curves.elasticOut.transform(_enter.value);
 
     return SizedBox(
       width: 150,

@@ -34,6 +34,20 @@ Ketentuan:
 
 ## P1 — Spesifikasi halaman
 
+<<<<<<< HEAD
+=======
+### DHS Kuliah
+Menu **Akademik > DHS > DHS Kuliah** menampilkan nilai per mata kuliah yang
+tersedia dari endpoint demo
+`https://6adab9277512f497b30020ef.mockapi.io/nilai?npm={npm}`. Kelompokkan
+baris nilai menurut semester/tahun akademik dan tampilkan kode mata kuliah,
+nilai, huruf mutu, serta angka mutu yang memang tersedia. Jangan mengarang
+nama mata kuliah, SKS, IPK, atau nilai yang tidak ada pada respons.
+
+Endpoint nilai tersebut berbeda dari endpoint login `/user`; data nilainya
+tidak dapat digunakan untuk autentikasi.
+
+>>>>>>> f8fc6fe (Revisi)
 ### 1. Beranda
 Beranda menjadi dashboard ringkas untuk kebutuhan mahasiswa sehari-hari. Prioritaskan:
 - **Jadwal Hari Ini:** daftar mata kuliah hari ini, jam, ruang, dan dosen jika datanya tersedia.
@@ -101,7 +115,12 @@ Halaman Profil berisi informasi mahasiswa yang tersedia:
 - [ ] Profil selalu menjadi tab paling kanan.
 - [ ] Beranda menampilkan bagian Jadwal Hari Ini, Tugas Terdekat, dan Akses Cepat yang terhubung ke fitur terkait.
 - [ ] Jadwal memiliki tampilan Harian dan Mingguan serta informasi mata kuliah yang tersedia.
+<<<<<<< HEAD
 - [ ] Akademik memiliki enam menu terpisah: Materi, Tugas, Nilai, Presensi, KTM, KRS.
+=======
+- [x] Akademik memiliki enam menu utama: Materi, Tugas, Nilai, Presensi, KTM, KRS, serta akses layanan DHS.
+- [x] DHS Kuliah mengambil data dari endpoint `/nilai?npm={npm}`, mendukung respons envelope MockAPI, dan menampilkan nilai yang tersedia per semester tanpa data rekaan.
+>>>>>>> f8fc6fe (Revisi)
 - [ ] Pengumuman memiliki daftar dan detail yang berfungsi jika data detail tersedia.
 - [ ] Profil hanya menampilkan data mahasiswa yang benar-benar tersedia.
 - [ ] Loading, empty, dan error state ditangani.

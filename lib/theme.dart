@@ -100,12 +100,24 @@ class AppText {
     weight: FontWeight.w600,
   );
   static final TextStyle name = _poppins(size: 18, weight: FontWeight.w600);
-  static final TextStyle nameSmall = _poppins(size: 17, weight: FontWeight.w600);
-  static final TextStyle cardTitle = _poppins(size: 14, weight: FontWeight.w600);
-  static final TextStyle listTitle = _poppins(size: 13, weight: FontWeight.w500);
+  static final TextStyle nameSmall = _poppins(
+    size: 17,
+    weight: FontWeight.w600,
+  );
+  static final TextStyle cardTitle = _poppins(
+    size: 14,
+    weight: FontWeight.w600,
+  );
+  static final TextStyle listTitle = _poppins(
+    size: 13,
+    weight: FontWeight.w500,
+  );
   static final TextStyle body = _poppins(size: 12, weight: FontWeight.w400);
   static final TextStyle caption = _poppins(size: 11, weight: FontWeight.w400);
-  static final TextStyle bigNumber = _poppins(size: 46, weight: FontWeight.w600);
+  static final TextStyle bigNumber = _poppins(
+    size: 46,
+    weight: FontWeight.w600,
+  );
   static final TextStyle navLabel = _poppins(size: 13, weight: FontWeight.w500);
 }
 
@@ -127,10 +139,9 @@ class AppTheme {
       splashFactory: NoSplash.splashFactory,
       highlightColor: Colors.transparent,
       hoverColor: Colors.transparent,
-      textTheme: GoogleFonts.poppinsTextTheme(base.textTheme).apply(
-        bodyColor: AppColors.navy,
-        displayColor: AppColors.navy,
-      ),
+      textTheme: GoogleFonts.poppinsTextTheme(
+        base.textTheme,
+      ).apply(bodyColor: AppColors.navy, displayColor: AppColors.navy),
     );
   }
 }
