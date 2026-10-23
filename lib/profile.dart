@@ -24,7 +24,7 @@ class ProfileScreen extends StatelessWidget {
                   const _ProfileAvatar(),
                   const SizedBox(height: 14),
                   Text(
-                    'Alina Putri',
+                    'Lulu Zahirah',
                     style: AppText.name.copyWith(color: Colors.white),
                   ),
                   Text(
@@ -46,7 +46,7 @@ class ProfileScreen extends StatelessWidget {
                   index: 1,
                   child: ListRow(
                     leading: pastelTile(Icons.school_outlined, 1),
-                    body: _rowText('NIM', '2024010001'),
+                    body: _rowText('NIM', '24903460015'),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -54,7 +54,7 @@ class ProfileScreen extends StatelessWidget {
                   index: 2,
                   child: ListRow(
                     leading: pastelTile(Icons.menu_book_outlined, 2),
-                    body: _rowText('Program studi', 'Teknik Informatika'),
+                    body: _rowText('Program studi', 'Teknologi Rekayasa Multimedia'),
                   ),
                 ),
                 const SizedBox(height: 10),
@@ -62,7 +62,7 @@ class ProfileScreen extends StatelessWidget {
                   index: 3,
                   child: ListRow(
                     leading: pastelTile(Icons.mail_outline, 3),
-                    body: _rowText('Email', 'nama@kampus.ac.id'),
+                    body: _rowText('Email', 'official@pdbi.ac.id'),
                   ),
                 ),
                 const SizedBox(height: 20),

@@ -68,7 +68,7 @@ class HomeScreen extends StatelessWidget {
                   'Selamat pagi,',
                   style: AppText.body.copyWith(color: AppColors.textSecondary),
                 ),
-                Text('Alina Putri', style: AppText.nameSmall),
+                Text('Lulu Zahirah', style: AppText.nameSmall),
               ],
             ),
           ),

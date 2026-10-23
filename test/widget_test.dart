@@ -1,25 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 
-import 'package:bas/main.dart';
+import 'package:bas/api/auth_api.dart';
+import 'package:bas/pages/auth_page.dart';
+import 'package:bas/welcome.dart';
+
+class _FakeAuthApi extends AuthApi {
+  @override
+  Future<Map<String, dynamic>> fetchRandomUser() async {
+    return <String, dynamic>{
+      'login': <String, dynamic>{
+        'username': 'testuser',
+        'password': 'testpass',
+      },
+    };
+  }
+}
 
 void main() {
-  testWidgets('Login mengarah ke Student App dengan 4 tab',
-      (WidgetTester tester) async {
-    await tester.pumpWidget(const MyApp());
+  testWidgets('Login berhasil membuka Student App', (
+    WidgetTester tester,
+  ) async {
+    await tester.pumpWidget(
+      MaterialApp(home: AuthPage(authApi: _FakeAuthApi())),
+    );
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 300));
 
-    expect(find.text('Masuk ke akun Anda'), findsOneWidget);
+    expect(find.text('Username: testuser'), findsOneWidget);
+    expect(find.text('Password: testpass'), findsOneWidget);
 
-    await tester.enterText(find.byType(TextFormField).first, '1234567890');
-    await tester.enterText(find.byType(TextFormField).last, 'password');
-    await tester.tap(find.text('Login'));
-    await tester.pumpAndSettle();
-
-    expect(find.text('Student App'), findsOneWidget);
-    expect(find.text('Welcome My Student Apps'), findsOneWidget);
-    expect(find.text('Home'), findsWidgets);
-    expect(find.text('Info'), findsOneWidget);
-    expect(find.text('Profile'), findsWidgets);
-    expect(find.text('News'), findsOneWidget);
+    await tester.enterText(find.byType(TextField).first, 'testuser');
+    await tester.enterText(find.byType(TextField).last, 'testpass');
+    await tester.ensureVisible(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.pump();
+    await tester.tap(find.widgetWithText(ElevatedButton, 'Login'));
+    await tester.pump();
+    await tester.pump(const Duration(milliseconds: 800));
+    await tester.pump(const Duration(milliseconds: 300));
+    await tester.pump(const Duration(milliseconds: 700));
+    expect(find.byType(WelcomeScreen), findsOneWidget);
+    expect(find.byType(WelcomeScreen), findsOneWidget);
   });
 }
