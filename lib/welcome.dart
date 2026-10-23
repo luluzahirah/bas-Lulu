@@ -41,15 +41,15 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
   static const List<Widget> _pages = <Widget>[
     HomeScreen(),
     InfoScreen(),
-    ProfileScreen(),
     NewsScreen(),
+    ProfileScreen(),
   ];
 
   static const List<(IconData, String)> _tabs = <(IconData, String)>[
     (Icons.home_outlined, 'Home'),
     (Icons.info_outline, 'Info'),
-    (Icons.person_outline, 'Profile'),
     (Icons.article_outlined, 'News'),
+    (Icons.person_outline, 'Profile'),
   ];
 
   @override
