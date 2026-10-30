@@ -88,29 +88,6 @@ class UserAccount {
 /// publik bukan metode autentikasi yang aman untuk produksi. Ini hanya untuk
 /// keperluan demo/tugas. Jangan gunakan untuk data mahasiswa sungguhan.
 class AuthApi {
-<<<<<<< HEAD
-  AuthApi({http.Client? client}) : _client = client ?? http.Client();
-
-  static final Uri _endpoint =
-      Uri.parse('https://6adab9277512f497b30020ef.mockapi.io/user');
-
-  final http.Client _client;
-
-  /// Checks submitted NPM and SHA-1 password against the demo API.
-  /// Each API record is expected to have "NPM" and "Password" fields.
-  Future<bool> authenticate({
-    required String npm,
-    required String passwordSha1,
-  }) async {
-    final response = await _client
-        .get(_endpoint)
-        .timeout(const Duration(seconds: 15));
-
-    if (response.statusCode != 200) {
-      throw HttpException(
-        'Gagal mengambil data login (HTTP ${response.statusCode})',
-      );
-=======
   static const String _baseUrl =
       'https://6adab9277512f497b30020ef.mockapi.io/user';
 
@@ -123,30 +100,10 @@ class AuthApi {
 
     if (response.statusCode != 200) {
       throw HttpException('Gagal mengambil data (HTTP ${response.statusCode})');
->>>>>>> f8fc6fe (Revisi)
     }
 
     final dynamic data = jsonDecode(response.body);
     if (data is! List) {
-<<<<<<< HEAD
-      throw const FormatException(
-        'Respons API login harus berupa daftar user.',
-      );
-    }
-
-    for (final dynamic item in data) {
-      if (item is! Map<String, dynamic>) continue;
-      final dynamic apiNpm = item['NPM'];
-      final dynamic apiPassword = item['Password'];
-      if (apiNpm is String &&
-          apiPassword is String &&
-          apiNpm.trim() == npm.trim() &&
-          apiPassword.trim().toLowerCase() == passwordSha1.toLowerCase()) {
-        return true;
-      }
-    }
-    return false;
-=======
       throw const FormatException('Format respons API tidak valid');
     }
 
@@ -268,8 +225,5 @@ class AuthApi {
   int _leftRotate(int n, int shift) {
     n &= 0xFFFFFFFF;
     return ((n << shift) | (n >> (32 - shift))) & 0xFFFFFFFF;
->>>>>>> f8fc6fe (Revisi)
   }
-
-  void close() => _client.close();
 }

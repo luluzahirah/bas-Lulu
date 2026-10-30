@@ -38,19 +38,12 @@ Bottom navigation harus berurutan dari kiri ke kanan:
 4. Hitung SHA-1 hex dari password input menggunakan UTF-8 sesuai kontrak API demo.
 5. Kirim GET ke `https://6adab9277512f497b30020ef.mockapi.io/user`.
 6. Pastikan respons HTTP berhasil dan JSON valid.
-<<<<<<< HEAD
-7. Cari record yang field `NPM`-nya cocok dengan NPM input dan field `Password`-nya cocok dengan hash yang dihitung.
-8. Jika cocok, lanjutkan ke Beranda; jika tidak, tampilkan pesan login gagal.
-9. Tangani timeout, koneksi gagal, JSON tidak valid, respons kosong, dan error server.
-10. Jangan mencatat atau menampilkan password/hash di UI atau log.
-=======
 7. Baca NPM dari field `NPM` atau `npm`, dan hash tersimpan dari `Password` atau `pass_sha1`.
 8. Pastikan record memiliki kedua field tersebut, lalu cocokkan NPM dan SHA-1 dengan input.
 9. Jika cocok, lanjutkan ke Beranda; jika tidak, tampilkan pesan login gagal.
 10. Jika endpoint tidak menyertakan NPM dan hash, tampilkan petunjuk konfigurasi field, bukan pesan kredensial salah.
 11. Tangani timeout, koneksi gagal, JSON tidak valid, respons kosong, dan error server.
 12. Jangan mencatat atau menampilkan password/hash di UI atau log.
->>>>>>> f8fc6fe (Revisi)
 
 ```mermaid
 flowchart TD
@@ -103,11 +96,7 @@ Jika jadwal belum tersedia, tampilkan empty state. Jika pemuatan gagal, tampilka
 
 ## Workflow halaman Akademik
 
-<<<<<<< HEAD
-Halaman Akademik menampilkan enam ikon/menu yang masing-masing membuka halaman sendiri:
-=======
 Halaman Akademik menampilkan enam ikon/menu utama yang masing-masing membuka halaman sendiri:
->>>>>>> f8fc6fe (Revisi)
 
 | Menu | Isi dan alur |
 |---|---|
@@ -115,11 +104,6 @@ Halaman Akademik menampilkan enam ikon/menu utama yang masing-masing membuka hal
 | **Tugas** | Lihat daftar tugas, mata kuliah, tenggat, dan status pengumpulan jika didukung. Buka detail tugas untuk instruksi lengkap bila tersedia. |
 | **Nilai** | Pilih semester atau mata kuliah dan lihat nilai yang tersedia. Jangan membuat nilai palsu. |
 | **Presensi** | Lihat ringkasan kehadiran dan riwayat. Aksi presensi hanya boleh dinyatakan berhasil setelah menerima konfirmasi backend. |
-<<<<<<< HEAD
-| **KTM** | Tampilkan kartu mahasiswa digital berdasarkan data tepercaya yang tersedia. Jangan mengarang nama, NPM, foto, atau program studi. |
-| **KRS** | Pilih semester, lihat mata kuliah dan total SKS jika tersedia, kemudian lihat status pengajuan. Pengajuan hanya dianggap berhasil jika dikonfirmasi backend. |
-
-=======
 | **KTM** | Tampilkan kartu mahasiswa digital berdasarkan data tepercaya yang tersedia. Jangan mengarang nama, NPM, foto, atau program studi. Buat KTM tersebut bisa didownload |
 | **KRS** | Pilih semester, lihat mata kuliah dan total SKS jika tersedia, kemudian lihat status pengajuan. Pengajuan hanya dianggap berhasil jika dikonfirmasi backend. |
 
@@ -136,7 +120,6 @@ dan IPK/IPS tidak disimpulkan dari data yang tidak disediakan.
 Endpoint `/nilai` khusus data nilai. Login tetap menggunakan endpoint
 `/user`, karena endpoint nilai tidak memiliki kontrak autentikasi.
 
->>>>>>> f8fc6fe (Revisi)
 Setiap menu harus memiliki label teks, ikon yang mudah dipahami, area sentuh yang memadai, dan state loading/empty/error. Jika belum terhubung backend, tandai jelas sebagai **Demo**.
 
 ## Workflow halaman Pengumuman

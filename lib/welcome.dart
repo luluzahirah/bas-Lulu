@@ -46,20 +46,6 @@ class WelcomeScreen extends StatefulWidget {
 class _WelcomeScreenState extends State<WelcomeScreen> {
   int _selectedIndex = 0;
 
-<<<<<<< HEAD
-  static const List<Widget> _pages = <Widget>[
-    HomeScreen(),
-    InfoScreen(),
-    NewsScreen(),
-    ProfileScreen(),
-  ];
-
-  static const List<(IconData, String)> _tabs = <(IconData, String)>[
-    (Icons.home_outlined, 'Home'),
-    (Icons.info_outline, 'Info'),
-    (Icons.article_outlined, 'News'),
-    (Icons.person_outline, 'Profile'),
-=======
   // Pending index untuk langsung buka submenu Akademik
   int? _pendingAkademikIndex;
 
@@ -69,7 +55,6 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     (Icons.school_outlined, 'Akademik'),
     (Icons.campaign_outlined, 'Pengumuman'),
     (Icons.person_outline, 'Profil'),
->>>>>>> f8fc6fe (Revisi)
   ];
 
   void _goToTab(int index) {
