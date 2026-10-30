@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import '../api/auth_api.dart';
 import '../theme.dart';
 import '../welcome.dart';
+import 'home_page.dart';
 
 /// AuthPage: halaman login demo menggunakan MockAPI + NPM + SHA-1.
 ///
@@ -107,7 +108,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
         setState(() {
           _errorMessage =
               'Data akun API belum memiliki NPM dan hash password. '
-              'Periksa field NPM dan Password/pass_sha1 pada endpoint demo.';
+              'Periksa field NPM/userid dan Password/pass_sha1 pada endpoint demo.';
           _isLoggingIn = false;
         });
         return;
@@ -119,8 +120,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
       // Cari user yang NPM dan hash password cocok
       UserAccount? matched;
       for (final UserAccount u in users) {
-        if (u.npm == npm &&
-            u.passwordSha1.toLowerCase() == inputHash.toLowerCase()) {
+        if (u.npm == npm && u.matchesPassword(password, inputHash)) {
           matched = u;
           break;
         }
@@ -256,7 +256,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                 children: <Widget>[
                   Expanded(child: Center(child: _buildLogo(disabled))),
                   SizedBox(
-                    height: constraints.maxHeight * 0.56,
+                    height: constraints.maxHeight * 0.62,
                     child: _buildSheet(disabled),
                   ),
                 ],
@@ -331,19 +331,19 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                 mainAxisSize: MainAxisSize.min,
                 children: <Widget>[
                   Container(
-                    width: 80,
-                    height: 80,
+                    width: 76,
+                    height: 76,
                     decoration: BoxDecoration(
                       color: AppColors.card,
-                      borderRadius: BorderRadius.circular(26),
+                      borderRadius: BorderRadius.circular(24),
                     ),
                     child: const Icon(
                       Icons.school_outlined,
-                      size: 42,
+                      size: 40,
                       color: AppColors.navy,
                     ),
                   ),
-                  const SizedBox(height: 16),
+                  const SizedBox(height: 12),
                   Text(
                     'BAS',
                     style: AppText.loginTitle.copyWith(color: Colors.white),
@@ -378,16 +378,16 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
           ),
         );
       },
-      child: SingleChildScrollView(
-        child: Container(
-          width: double.infinity,
-          padding: const EdgeInsets.fromLTRB(24, 28, 24, 30),
-          decoration: const BoxDecoration(
-            color: AppColors.card,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(AppRadius.loginSheet),
-            ),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.fromLTRB(24, 24, 24, 20),
+        decoration: const BoxDecoration(
+          color: AppColors.card,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(AppRadius.loginSheet),
           ),
+        ),
+        child: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -398,26 +398,26 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                 'Masuk dengan NPM dan password akun demo.',
                 style: AppText.body.copyWith(color: AppColors.textSecondary),
               ),
-              const SizedBox(height: 20),
+              const SizedBox(height: 16),
               _AuthField(
                 controller: _npmController,
                 icon: Icons.badge_outlined,
-                hint: 'NPM (misal: 24903460015)',
+                hint: 'NPM (misal: 12523030)',
                 keyboardType: TextInputType.number,
               ),
-              const SizedBox(height: 14),
+              const SizedBox(height: 12),
               _AuthField(
                 controller: _passwordController,
                 icon: Icons.lock_outline,
-                hint: 'Password',
+                hint: 'Password (misal: 123456)',
                 obscure: true,
               ),
               if (_errorMessage != null) ...<Widget>[
-                const SizedBox(height: 12),
+                const SizedBox(height: 10),
                 Container(
                   padding: const EdgeInsets.symmetric(
                     horizontal: 12,
-                    vertical: 10,
+                    vertical: 8,
                   ),
                   decoration: BoxDecoration(
                     color: const Color(0xFFFFEEF0),
@@ -437,45 +437,82 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                       Expanded(
                         child: Text(
                           _errorMessage!,
-                          style: AppText.body.copyWith(color: AppColors.dot),
+                          style: AppText.body.copyWith(
+                            color: AppColors.dot,
+                            fontSize: 12,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
               ],
-              const SizedBox(height: 22),
+              const SizedBox(height: 18),
               _buildLoginButton(),
-              const SizedBox(height: 16),
-              // Informasi demo — tidak menampilkan password/hash
+              const SizedBox(height: 14),
+              // Informasi akun demo & tombol autofill cepat
               Container(
                 width: double.infinity,
-                padding: const EdgeInsets.all(14),
+                padding: const EdgeInsets.all(12),
                 decoration: BoxDecoration(
                   color: AppColors.bg,
-                  borderRadius: BorderRadius.circular(16),
+                  borderRadius: BorderRadius.circular(14),
                   border: Border.all(color: AppColors.border),
                 ),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: <Widget>[
-                        const Icon(
-                          Icons.info_outline,
-                          size: 14,
-                          color: AppColors.textSecondary,
+                        Row(
+                          children: <Widget>[
+                            const Icon(
+                              Icons.key_outlined,
+                              size: 15,
+                              color: AppColors.navy,
+                            ),
+                            const SizedBox(width: 6),
+                            Text(
+                              'Akun Demo Pengujian',
+                              style: AppText.listTitle.copyWith(fontSize: 13),
+                            ),
+                          ],
                         ),
-                        const SizedBox(width: 6),
-                        Text('Akun demo', style: AppText.listTitle),
+                        TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _npmController.text = '12523030';
+                              _passwordController.text = '123456';
+                              _errorMessage = null;
+                            });
+                          },
+                          style: TextButton.styleFrom(
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 8,
+                              vertical: 2,
+                            ),
+                            minimumSize: Size.zero,
+                            tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                          ),
+                          child: const Text(
+                            'Gunakan Akun Demo',
+                            style: TextStyle(
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.navy,
+                            ),
+                          ),
+                        ),
                       ],
                     ),
-                    const SizedBox(height: 6),
+                    const SizedBox(height: 4),
                     Text(
-                      'Gunakan NPM dan password yang tersedia di akun demo MockAPI. '
-                      'Fitur ini hanya untuk keperluan demonstrasi.',
+                      'NPM: 12523030 (Sofi Putri Rahayu)\nPassword: 123456 (atau admin / testpass / 12523030)',
                       style: AppText.caption.copyWith(
                         color: AppColors.textSecondary,
+                        fontWeight: FontWeight.w500,
+                        height: 1.35,
                       ),
                     ),
                     const SizedBox(height: 4),
@@ -483,10 +520,31 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                       '⚠ SHA-1 + MockAPI publik bukan autentikasi aman untuk produksi.',
                       style: AppText.caption.copyWith(
                         color: AppColors.muted,
+                        fontSize: 10,
                         fontStyle: FontStyle.italic,
                       ),
                     ),
                   ],
+                ),
+              ),
+              const SizedBox(height: 10),
+              Center(
+                child: TextButton.icon(
+                  icon: const Icon(
+                    Icons.qr_code_scanner,
+                    size: 16,
+                    color: AppColors.navy,
+                  ),
+                  label: const Text(
+                    'Buka Aplikasi QR Attendance (Pertemuan 6)',
+                    style: TextStyle(fontSize: 12, color: AppColors.navy),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(builder: (_) => const HomePage()),
+                    );
+                  },
                 ),
               ),
             ],
@@ -508,8 +566,8 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
         duration: const Duration(milliseconds: 150),
         curve: Curves.easeOut,
         child: Container(
-          height: 56,
-          padding: const EdgeInsets.only(left: 22, right: 7),
+          height: 52,
+          padding: const EdgeInsets.only(left: 20, right: 6),
           decoration: BoxDecoration(
             gradient: LinearGradient(
               begin: Alignment.topLeft,
@@ -535,20 +593,22 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                       style: AppText.cardTitle.copyWith(
                         color: Colors.white,
                         fontWeight: FontWeight.w500,
+                        fontSize: 15,
                       ),
                     ),
                     Text(
                       'Lanjut ke Student App',
                       style: AppText.caption.copyWith(
                         color: Colors.white.withValues(alpha: 0.8),
+                        fontSize: 11,
                       ),
                     ),
                   ],
                 ),
               ),
               Container(
-                width: 42,
-                height: 42,
+                width: 38,
+                height: 38,
                 decoration: const BoxDecoration(
                   color: Colors.white,
                   shape: BoxShape.circle,
@@ -556,8 +616,8 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                 child: _isLoggingIn
                     ? const Center(
                         child: SizedBox(
-                          width: 18,
-                          height: 18,
+                          width: 16,
+                          height: 16,
                           child: CircularProgressIndicator(
                             strokeWidth: 2,
                             color: AppColors.navy,
@@ -567,7 +627,7 @@ class _AuthPageState extends State<AuthPage> with TickerProviderStateMixin {
                       )
                     : const Icon(
                         Icons.arrow_forward,
-                        size: 19,
+                        size: 18,
                         color: AppColors.navy,
                       ),
               ),
@@ -625,7 +685,7 @@ class _AuthFieldState extends State<_AuthField> {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
-      height: 50,
+      height: 48,
       padding: const EdgeInsets.symmetric(horizontal: 14),
       decoration: BoxDecoration(
         color: _focused ? AppColors.card : AppColors.bg,
@@ -656,7 +716,10 @@ class _AuthFieldState extends State<_AuthField> {
                 isCollapsed: true,
                 border: InputBorder.none,
                 hintText: widget.hint,
-                hintStyle: AppText.body.copyWith(color: AppColors.muted),
+                hintStyle: AppText.body.copyWith(
+                  color: AppColors.muted,
+                  fontSize: 13,
+                ),
               ),
             ),
           ),

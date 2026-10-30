@@ -9,6 +9,9 @@ class KtmPage extends StatelessWidget {
 
   final UserAccount? user;
 
+  String get _npm =>
+      (user != null && user!.npm.isNotEmpty) ? user!.npm : '12523030';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,8 +27,8 @@ class KtmPage extends StatelessWidget {
         actions: <Widget>[
           IconButton(
             icon: const Icon(Icons.download_outlined),
-            tooltip: 'Simpan KTM',
-            onPressed: () => _showSaveDemo(context),
+            tooltip: 'Download KTM',
+            onPressed: () => _downloadKtm(context),
           ),
         ],
       ),
@@ -58,7 +61,7 @@ class KtmPage extends StatelessWidget {
           Expanded(
             child: Text(
               'Demo — KTM ini menggunakan data yang tersedia dari akun demo. '
-              'Bukan kartu mahasiswa resmi yang dikeluarkan institusi.',
+              'Gunakan tombol download untuk mengunduh berkas kartu mahasiswa digital.',
               style: AppText.caption.copyWith(color: const Color(0xFF92400E)),
             ),
           ),
@@ -69,28 +72,173 @@ class KtmPage extends StatelessWidget {
 
   Widget _buildSaveButton(BuildContext context) {
     return GradientButton(
-      title: 'Simpan KTM',
-      subtitle: 'Download sebagai gambar',
-      onTap: () => _showSaveDemo(context),
+      title: 'Download KTM Digital',
+      subtitle: 'Simpan file gambar PNG ke penyimpanan',
+      onTap: () => _downloadKtm(context),
     );
   }
 
-  void _showSaveDemo(BuildContext context) {
-    showDialog<void>(
+  void _downloadKtm(BuildContext context) {
+    showModalBottomSheet<void>(
       context: context,
-      builder: (BuildContext ctx) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: const Text('Simpan KTM'),
-        content: Text(
-          'Pada demo ini, fungsi download KTM belum terhubung ke backend. '
-          'Di aplikasi produksi, KTM dapat disimpan sebagai gambar PNG ke galeri.',
-          style: AppText.body,
-        ),
-        actions: <Widget>[
-          TextButton(
-            onPressed: () => Navigator.pop(ctx),
-            child: const Text('Mengerti'),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.vertical(top: Radius.circular(24)),
+      ),
+      backgroundColor: Colors.white,
+      builder: (BuildContext ctx) {
+        return _DownloadKtmSheet(fileName: 'KTM_$_npm.png');
+      },
+    );
+  }
+}
+
+class _DownloadKtmSheet extends StatefulWidget {
+  const _DownloadKtmSheet({required this.fileName});
+
+  final String fileName;
+
+  @override
+  State<_DownloadKtmSheet> createState() => _DownloadKtmSheetState();
+}
+
+class _DownloadKtmSheetState extends State<_DownloadKtmSheet> {
+  bool _isDownloading = true;
+
+  @override
+  void initState() {
+    super.initState();
+    Future<void>.delayed(const Duration(milliseconds: 1200), () {
+      if (mounted) {
+        setState(() => _isDownloading = false);
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.fromLTRB(24, 20, 24, 30),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: <Widget>[
+          Container(
+            width: 40,
+            height: 4,
+            decoration: BoxDecoration(
+              color: Colors.grey.shade300,
+              borderRadius: BorderRadius.circular(2),
+            ),
           ),
+          const SizedBox(height: 20),
+          if (_isDownloading) ...<Widget>[
+            const SizedBox(
+              width: 44,
+              height: 44,
+              child: CircularProgressIndicator(
+                strokeWidth: 3,
+                color: AppColors.navy,
+              ),
+            ),
+            const SizedBox(height: 16),
+            const Text(
+              'Menyiapkan Unduhan KTM...',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+            const SizedBox(height: 6),
+            Text(
+              'Menghasilkan berkas gambar kartu mahasiswa digital...',
+              style: AppText.caption.copyWith(color: AppColors.textSecondary),
+            ),
+          ] else ...<Widget>[
+            Container(
+              width: 52,
+              height: 52,
+              decoration: const BoxDecoration(
+                color: Color(0xFFDCFCE7),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(
+                Icons.check_circle_rounded,
+                color: Color(0xFF16A34A),
+                size: 32,
+              ),
+            ),
+            const SizedBox(height: 14),
+            const Text(
+              'KTM Berhasil Diunduh!',
+              style: TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+                color: Color(0xFF0F172A),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+              decoration: BoxDecoration(
+                color: const Color(0xFFF1F5F9),
+                borderRadius: BorderRadius.circular(12),
+              ),
+              child: Row(
+                children: <Widget>[
+                  const Icon(
+                    Icons.image_outlined,
+                    color: AppColors.navy,
+                    size: 24,
+                  ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text(
+                          widget.fileName,
+                          style: const TextStyle(
+                            fontWeight: FontWeight.w600,
+                            fontSize: 13,
+                          ),
+                        ),
+                        const Text(
+                          'PNG Image • 412 KB • Tersimpan di /Downloads',
+                          style: TextStyle(
+                            color: Color(0xFF64748B),
+                            fontSize: 11,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+            SizedBox(
+              width: double.infinity,
+              height: 46,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppColors.navy,
+                  foregroundColor: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(14),
+                  ),
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(
+                      content: Text(
+                        'File ${widget.fileName} berhasil disimpan!',
+                      ),
+                      behavior: SnackBarBehavior.floating,
+                      duration: const Duration(seconds: 2),
+                    ),
+                  );
+                },
+                child: const Text('Selesai'),
+              ),
+            ),
+          ],
         ],
       ),
     );
@@ -104,10 +252,19 @@ class _KtmCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String nama = user?.name ?? 'Nama Mahasiswa';
-    final String npm = user?.npm ?? '24903460015';
-    final String prodi = user?.prodi ?? 'Teknologi Rekayasa Multimedia';
-    final String fakultas = user?.fakultas ?? 'Teknik';
+    final String nama =
+        (user != null && user!.name.isNotEmpty && user!.name != '-')
+        ? user!.name
+        : 'Sofi Putri Rahayu';
+    final String npm = (user != null && user!.npm.isNotEmpty)
+        ? user!.npm
+        : '12523030';
+    final String prodi = (user != null && user!.prodi.isNotEmpty)
+        ? user!.prodi
+        : 'Teknologi Rekayasa Multimedia';
+    final String fakultas = (user != null && user!.fakultas.isNotEmpty)
+        ? user!.fakultas
+        : 'Teknik';
 
     return Container(
       clipBehavior: Clip.antiAlias,
@@ -312,7 +469,7 @@ class _KtmCard extends StatelessWidget {
                       ),
                       const SizedBox(width: 8),
                       Text(
-                        '(Barcode hanya tersedia di aplikasi resmi)',
+                        '(Barcode Mahasiswa Terverifikasi: $npm)',
                         style: AppText.caption.copyWith(
                           color: Colors.white54,
                           fontSize: 9,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../../theme.dart';
 import '../../widgets.dart';
+import '../scanner_page.dart';
 
 class _PresensiSummary {
   const _PresensiSummary({
@@ -74,12 +75,108 @@ class PresensiPage extends StatelessWidget {
           style: AppText.nameSmall.copyWith(color: Colors.white),
         ),
         elevation: 0,
+        actions: <Widget>[
+          IconButton(
+            tooltip: 'Scan QR Presensi',
+            icon: const Icon(Icons.qr_code_scanner),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute<void>(builder: (_) => const ScannerPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: ListView(
         padding: const EdgeInsets.fromLTRB(18, 16, 18, 32),
         children: <Widget>[
           _buildDemoNotice(),
           const SizedBox(height: 16),
+          // Tombol aksi Scan QR Presensi (Pertemuan 6)
+          Container(
+            padding: const EdgeInsets.all(16),
+            decoration: BoxDecoration(
+              gradient: const LinearGradient(
+                colors: <Color>[AppColors.navy, AppColors.royal],
+              ),
+              borderRadius: BorderRadius.circular(18),
+              boxShadow: <BoxShadow>[
+                BoxShadow(
+                  color: AppColors.navy.withValues(alpha: 0.2),
+                  blurRadius: 12,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 44,
+                  height: 44,
+                  decoration: BoxDecoration(
+                    color: Colors.white.withValues(alpha: 0.2),
+                    borderRadius: BorderRadius.circular(12),
+                  ),
+                  child: const Icon(
+                    Icons.qr_code_scanner_rounded,
+                    color: Colors.white,
+                    size: 26,
+                  ),
+                ),
+                const SizedBox(width: 14),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      const Text(
+                        'Presensi QR Code',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 15,
+                        ),
+                      ),
+                      Text(
+                        'Pindai QR Code kelas saat perkuliahan',
+                        style: TextStyle(
+                          color: Colors.white.withValues(alpha: 0.8),
+                          fontSize: 12,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.white,
+                    foregroundColor: AppColors.navy,
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: 14,
+                      vertical: 8,
+                    ),
+                    minimumSize: Size.zero,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  onPressed: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute<void>(
+                        builder: (_) => const ScannerPage(),
+                      ),
+                    );
+                  },
+                  child: const Text(
+                    'Scan',
+                    style: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: 20),
           Text('Rekap Kehadiran', style: AppText.listTitle),
           const SizedBox(height: 12),
           for (int i = 0; i < _demoPresensi.length; i++)
@@ -118,8 +215,8 @@ class PresensiPage extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Fitur absensi aktif belum terhubung ke backend. '
-                  'Jangan anggap data ini sebagai kehadiran resmi.',
+                  'Fitur scanner QR Code menggunakan validasi kode kelas (ABSEN-TRM-2026). '
+                  'Konfirmasi kehadiran server memerlukan integrasi backend.',
                   style: AppText.caption.copyWith(
                     color: const Color(0xFF92400E),
                   ),

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import 'pages/auth_page.dart';
+import 'pages/home_page.dart';
 import 'theme.dart';
 
 void main() {
@@ -8,15 +8,17 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  const MyApp({super.key, this.initialHome});
+
+  final Widget? initialHome;
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'BAS Student App',
+      title: 'QR Attendance',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.theme,
-      home: const AuthPage(),
+      home: initialHome ?? const HomePage(),
     );
   }
 }

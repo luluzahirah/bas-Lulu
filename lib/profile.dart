@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'api/auth_api.dart';
+import 'pages/akademik/ktm_page.dart';
 import 'pages/auth_page.dart';
 import 'theme.dart';
 import 'widgets.dart';
@@ -58,13 +59,34 @@ class ProfileScreen extends StatelessWidget {
                 Staggered(
                   index: 2,
                   child: ListRow(
+                    leading: pastelTile(Icons.credit_card_outlined, 1),
+                    body: _rowText('KTM Digital', 'Buka dan download KTM'),
+                    trailing: const Icon(
+                      Icons.chevron_right,
+                      size: 20,
+                      color: AppColors.muted,
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute<void>(
+                          builder: (_) => KtmPage(user: user),
+                        ),
+                      );
+                    },
+                  ),
+                ),
+                const SizedBox(height: 10),
+                Staggered(
+                  index: 3,
+                  child: ListRow(
                     leading: pastelTile(Icons.menu_book_outlined, 2),
                     body: _rowText('Program Studi', user.prodi),
                   ),
                 ),
                 const SizedBox(height: 10),
                 Staggered(
-                  index: 3,
+                  index: 4,
                   child: ListRow(
                     leading: pastelTile(Icons.account_balance_outlined, 3),
                     body: _rowText('Fakultas', user.fakultas),
@@ -73,7 +95,7 @@ class ProfileScreen extends StatelessWidget {
                 if (user.email != null && user.email!.isNotEmpty) ...<Widget>[
                   const SizedBox(height: 10),
                   Staggered(
-                    index: 4,
+                    index: 5,
                     child: ListRow(
                       leading: pastelTile(Icons.mail_outline, 4),
                       body: _rowText('Email', user.email!),
@@ -81,7 +103,7 @@ class ProfileScreen extends StatelessWidget {
                   ),
                 ],
                 const SizedBox(height: 20),
-                Staggered(index: 5, child: _LogoutButton(user: user)),
+                Staggered(index: 6, child: _LogoutButton(user: user)),
               ],
             ),
           ),
