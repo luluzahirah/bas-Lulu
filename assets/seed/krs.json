@@ -1,0 +1,72 @@
+[
+  {
+    "id": 119308,
+    "npm": "12523030",
+    "kd_matkul": "GC327",
+    "kd_kelas": "A",
+    "tahun": null,
+    "tri_semester": "",
+    "thn_akademik": "2023/2024",
+    "semester": "1",
+    "thn_akademik_now": "2023/2024",
+    "semester_now": "ganjil",
+    "group_id_nonreg": 0,
+    "status": 1
+  },
+  {
+    "id": 119309,
+    "npm": "12523030",
+    "kd_matkul": "GC311",
+    "kd_kelas": "A",
+    "tahun": null,
+    "tri_semester": "",
+    "thn_akademik": "2023/2024",
+    "semester": "1",
+    "thn_akademik_now": "2023/2024",
+    "semester_now": "ganjil",
+    "group_id_nonreg": 0,
+    "status": 1
+  },
+  {
+    "id": 119310,
+    "npm": "12523030",
+    "kd_matkul": "GC319",
+    "kd_kelas": "A",
+    "tahun": null,
+    "tri_semester": "",
+    "thn_akademik": "2023/2024",
+    "semester": "1",
+    "thn_akademik_now": "2023/2024",
+    "semester_now": "ganjil",
+    "group_id_nonreg": 0,
+    "status": 1
+  },
+  {
+    "id": "119311",
+    "npm": "12523030",
+    "kd_matkul": "GC330",
+    "kd_kelas": "A",
+    "tahun": "tahun 119311",
+    "tri_semester": "tri_semester 119311",
+    "thn_akademik": "2024/2025",
+    "semester": "5",
+    "thn_akademik_now": "2024/2025",
+    "semester_now": "ganjil",
+    "group_id_nonreg": 65,
+    "status": 0
+  },
+  {
+    "id": "119312",
+    "npm": "12523030",
+    "kd_matkul": "GC336",
+    "kd_kelas": "A",
+    "tahun": "tahun 119312",
+    "tri_semester": "tri_semester 119312",
+    "thn_akademik": "2024/2025",
+    "semester": "2",
+    "thn_akademik_now": "2024/2025",
+    "semester_now": "genap",
+    "group_id_nonreg": 46,
+    "status": 0
+  }
+]

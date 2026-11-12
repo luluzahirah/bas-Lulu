@@ -9,6 +9,8 @@ import 'pages/akademik/nilai_page.dart';
 import 'pages/akademik/presensi_page.dart';
 import 'pages/akademik/ktm_page.dart';
 import 'pages/akademik/krs_page.dart';
+import 'pages/akademik/khs_page.dart';
+import 'pages/akademik/pengajuan_studi_page.dart';
 import 'pages/akademik/dhs_page.dart';
 
 class AkademikScreen extends StatelessWidget {
@@ -58,10 +60,22 @@ class AkademikScreen extends StatelessWidget {
       colors: <Color>[Color(0xFF0E7490), Color(0xFF38BDF8)],
     ),
     _MenuData(
+      icon: Icons.grade_outlined,
+      label: 'KHS',
+      subtitle: 'Kartu hasil studi',
+      colors: <Color>[Color(0xFF0F766E), Color(0xFF14B8A6)],
+    ),
+    _MenuData(
+      icon: Icons.assignment_turned_in_outlined,
+      label: 'Pengajuan',
+      subtitle: 'Permohonan studi',
+      colors: <Color>[Color(0xFF5B3FD1), Color(0xFF7C3AED)],
+    ),
+    _MenuData(
       icon: Icons.workspace_premium_outlined,
       label: 'DHS',
       subtitle: 'Hasil studi',
-      colors: <Color>[Color(0xFF0F766E), Color(0xFF34D399)],
+      colors: <Color>[Color(0xFF1E3A8A), Color(0xFF3B82F6)],
     ),
   ];
 
@@ -181,8 +195,12 @@ class AkademikScreen extends StatelessWidget {
         // Teruskan user ke KtmPage agar KTM menampilkan data sesungguhnya
         page = KtmPage(user: user);
       case 5:
-        page = const KrsPage();
+        page = KrsPage(npm: user?.npm);
       case 6:
+        page = KhsPage(npm: user?.npm);
+      case 7:
+        page = PengajuanStudiPage(npm: user?.npm);
+      case 8:
         page = DhsPage(npm: user?.npm);
       default:
         return;

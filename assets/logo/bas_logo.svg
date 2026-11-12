@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 64" width="320" height="64" fill="none">
+  <defs>
+    <linearGradient id="logo_box_grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2a4bc4" />
+      <stop offset="100%" stop-color="#12246b" />
+    </linearGradient>
+  </defs>
+
+  <!-- Icon Group (64x64) -->
+  <g id="icon">
+    <!-- Rounded Box (radius 16) -->
+    <rect x="0" y="0" width="64" height="64" rx="16" fill="url(#logo_box_grad)" />
+
+    <!-- Alas Topi Putih Transparan -->
+    <path d="M20 30V37C20 43 25.5 46 32 46C38.5 46 44 43 44 37V30L32 36Z" fill="#FFFFFF" fill-opacity="0.82" />
+
+    <!-- Topi Toga Belah Ketupat -->
+    <path d="M32 16L52 26L32 36L12 26Z" fill="#FFFFFF" />
+
+    <!-- Lingkaran Biru di Tengah Topi -->
+    <circle cx="32" cy="26" r="2.2" fill="#12246b" />
+
+    <!-- Tali / Kuncir Kuning #ffc83d & Bulatan Ujung -->
+    <path d="M32 26C37 26 46 29 47 34C48 37 48 40 48 41" stroke="#ffc83d" stroke-width="1.8" stroke-linecap="round" fill="none" />
+    <circle cx="48" cy="42" r="2.4" fill="#ffc83d" />
+  </g>
+
+  <!-- Typography Group -->
+  <text x="82" y="36" fill="#1d3a9e" font-family="Poppins, -apple-system, Roboto, sans-serif" font-weight="800" font-size="30" letter-spacing="3">BAS</text>
+  <text x="83" y="52" fill="#5b6690" font-family="Poppins, -apple-system, Roboto, sans-serif" font-weight="500" font-size="12" letter-spacing="0.2">Boash Application System</text>
+</svg>

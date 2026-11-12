@@ -3,7 +3,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:bas/api/auth_api.dart';
 
 void main() {
-  group('UserAccount.fromJson', () {
+  group('UserAccount.fromJson & matching', () {
     test('reads NPM and SHA-1 from the documented field names', () {
       final UserAccount user = UserAccount.fromJson(<String, dynamic>{
         'NPM': '12523030',
@@ -29,11 +29,13 @@ void main() {
         'userid': 12523030,
         'pass_sha1': '5bd2b3ecbed00f8cd09c073ff02be2d14ed28ecf',
         'nama': 'Sofi Putri Rahayu',
+        'login_name': 'Sofi Putri Rahayu',
       });
 
       expect(user.npm, '12523030');
       expect(user.passwordSha1, '5bd2b3ecbed00f8cd09c073ff02be2d14ed28ecf');
       expect(user.name, 'Sofi Putri Rahayu');
+      expect(user.loginName, 'Sofi Putri Rahayu');
     });
 
     test('does not treat login_name as an NPM', () {
@@ -46,6 +48,21 @@ void main() {
       expect(user.npm, isEmpty);
       expect(user.passwordSha1, 'sha1-hash');
       expect(user.name, 'Mahasiswa Demo');
+      expect(user.loginName, 'demo-user');
+    });
+
+    test('matchesIdentifier accepts NPM, full name, or login_name', () {
+      final UserAccount user = UserAccount.fromJson(<String, dynamic>{
+        'userid': 12523030,
+        'login_name': 'Sofi Putri Rahayu',
+        'nama': 'Sofi Putri Rahayu',
+        'pass_sha1': 'sha1-hash',
+      });
+
+      expect(user.matchesIdentifier('12523030'), isTrue);
+      expect(user.matchesIdentifier('Sofi Putri Rahayu'), isTrue);
+      expect(user.matchesIdentifier('sofi'), isTrue);
+      expect(user.matchesIdentifier('wrong_user'), isFalse);
     });
 
     test('matchesPassword accepts matching SHA-1 hash or demo fallback', () {
@@ -58,6 +75,7 @@ void main() {
 
       expect(user.matchesPassword('secret', correctSha1), isTrue);
       expect(user.matchesPassword('123456', api.sha1Hex('123456')), isTrue);
+      expect(user.matchesPassword('admin', api.sha1Hex('admin')), isTrue);
       expect(user.matchesPassword('wrong', api.sha1Hex('wrong')), isFalse);
     });
   });

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../api/nilai_api.dart';
 import '../../theme.dart';
 import '../../widgets.dart';
+import '../../services/session_service.dart';
 
 /// Halaman Nilai — mengambil data nilai dari MockAPI berdasarkan NPM.
 /// Endpoint: GET /nilai?npm={npm}
@@ -32,7 +33,13 @@ class _NilaiPageState extends State<NilaiPage> {
       vsync: Navigator.of(context),
       duration: const Duration(milliseconds: 1200),
     )..repeat();
-    _load();
+    final SessionService session = SessionService.instance;
+    if (session.npm == _npm && session.nilaiList.isNotEmpty) {
+      _items = List<NilaiItem>.from(session.nilaiList);
+      _state = _LoadState.success;
+    } else {
+      _load();
+    }
   }
 
   @override

@@ -113,19 +113,22 @@ class HomeScreen extends StatelessWidget {
       ),
       child: Row(
         children: <Widget>[
-          Container(
-            width: 46,
-            height: 46,
-            decoration: const BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: LinearGradient(
-                colors: <Color>[Color(0xFF4F7BFF), AppColors.periwinkle],
+          GestureDetector(
+            onTap: () => Scaffold.of(context).openDrawer(),
+            child: Container(
+              width: 46,
+              height: 46,
+              decoration: const BoxDecoration(
+                shape: BoxShape.circle,
+                gradient: LinearGradient(
+                  colors: <Color>[Color(0xFF4F7BFF), AppColors.periwinkle],
+                ),
               ),
-            ),
-            child: const Icon(
-              Icons.person_outline,
-              color: Colors.white,
-              size: 22,
+              child: const Icon(
+                Icons.person_outline,
+                color: Colors.white,
+                size: 22,
+              ),
             ),
           ),
           const SizedBox(width: 12),
@@ -147,6 +150,13 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
+          RoundIconButton(
+            icon: Icons.menu_rounded,
+            dot: false,
+            tooltip: 'Menu Sidebar',
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+          const SizedBox(width: 8),
           RoundIconButton(
             icon: Icons.notifications_none,
             dot: false,

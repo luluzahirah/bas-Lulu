@@ -1,0 +1,35 @@
+[
+  {
+    "id": "1",
+    "npm": "12523030",
+    "jenis": "Cuti",
+    "thn_akademik": "2024/2025",
+    "semester": "4",
+    "alasan": "Mengikuti program magang industri bersertifikat di luar kota selama satu semester.",
+    "status": "disetujui",
+    "tanggal_pengajuan": "2024-08-10T08:30:00.000Z",
+    "catatan": "Disetujui oleh Kepala Program Studi dan BAAK."
+  },
+  {
+    "id": "2",
+    "npm": "12523030",
+    "jenis": "Aktif Kembali",
+    "thn_akademik": "2024/2025",
+    "semester": "5",
+    "alasan": "Telah menyelesaikan masa cuti magang industri dan siap melanjutkan perkuliahan aktif.",
+    "status": "pending",
+    "tanggal_pengajuan": "2024-09-02T10:15:00.000Z",
+    "catatan": "Menunggu verifikasi berkas administrasi akademik."
+  },
+  {
+    "id": "3",
+    "npm": "12523030",
+    "jenis": "Pindah",
+    "thn_akademik": "2023/2024",
+    "semester": "2",
+    "alasan": "Mengajukan permohonan alih kelas dari sesi reguler pagi ke sesi malam/karyawan.",
+    "status": "ditolak",
+    "tanggal_pengajuan": "2024-01-20T14:45:00.000Z",
+    "catatan": "Kuota kelas karyawan untuk semester tersebut sudah penuh."
+  }
+]

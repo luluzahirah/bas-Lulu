@@ -1,0 +1,102 @@
+[
+  {
+    "id": "1",
+    "npm": "12523030",
+    "kd_matkul": "GC101",
+    "thn_akademik": "2023/2024",
+    "semester": "1",
+    "nilai_angka": 86.5,
+    "nilai_huruf": "A",
+    "bobot": 4.0
+  },
+  {
+    "id": "2",
+    "npm": "12523030",
+    "kd_matkul": "GC102",
+    "thn_akademik": "2023/2024",
+    "semester": "1",
+    "nilai_angka": 78.0,
+    "nilai_huruf": "AB",
+    "bobot": 3.5
+  },
+  {
+    "id": "3",
+    "npm": "12523030",
+    "kd_matkul": "GC103",
+    "thn_akademik": "2023/2024",
+    "semester": "1",
+    "nilai_angka": 88.0,
+    "nilai_huruf": "A",
+    "bobot": 4.0
+  },
+  {
+    "id": "4",
+    "npm": "12523030",
+    "kd_matkul": "GC201",
+    "thn_akademik": "2023/2024",
+    "semester": "2",
+    "nilai_angka": 84.0,
+    "nilai_huruf": "A",
+    "bobot": 4.0
+  },
+  {
+    "id": "5",
+    "npm": "12523030",
+    "kd_matkul": "GC202",
+    "thn_akademik": "2023/2024",
+    "semester": "2",
+    "nilai_angka": 72.5,
+    "nilai_huruf": "B",
+    "bobot": 3.0
+  },
+  {
+    "id": "6",
+    "npm": "12523030",
+    "kd_matkul": "GC336",
+    "thn_akademik": "2023/2024",
+    "semester": "2",
+    "nilai_angka": 80.0,
+    "nilai_huruf": "A",
+    "bobot": 4.0
+  },
+  {
+    "id": "7",
+    "npm": "12523030",
+    "kd_matkul": "GC327",
+    "thn_akademik": "2024/2025",
+    "semester": "5",
+    "nilai_angka": 89.0,
+    "nilai_huruf": "A",
+    "bobot": 4.0
+  },
+  {
+    "id": "8",
+    "npm": "12523030",
+    "kd_matkul": "GC311",
+    "thn_akademik": "2024/2025",
+    "semester": "5",
+    "nilai_angka": 82.5,
+    "nilai_huruf": "A",
+    "bobot": 4.0
+  },
+  {
+    "id": "9",
+    "npm": "12523030",
+    "kd_matkul": "GC319",
+    "thn_akademik": "2024/2025",
+    "semester": "5",
+    "nilai_angka": 77.0,
+    "nilai_huruf": "AB",
+    "bobot": 3.5
+  },
+  {
+    "id": "10",
+    "npm": "12523030",
+    "kd_matkul": "GC330",
+    "thn_akademik": "2024/2025",
+    "semester": "5",
+    "nilai_angka": 85.0,
+    "nilai_huruf": "A",
+    "bobot": 4.0
+  }
+]

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'akademik.dart';
 import 'api/auth_api.dart';
@@ -7,6 +8,8 @@ import 'jadwal.dart';
 import 'pengumuman.dart';
 import 'profile.dart';
 import 'theme.dart';
+import 'widgets/app_drawer.dart';
+import 'widgets/app_toast.dart';
 
 /// Memberi akses navigasi antar-tab dari dalam halaman manapun.
 class NavScope extends InheritedWidget {
@@ -45,6 +48,8 @@ class WelcomeScreen extends StatefulWidget {
 
 class _WelcomeScreenState extends State<WelcomeScreen> {
   int _selectedIndex = 0;
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  DateTime? _lastBackPressTime;
 
   // Pending index untuk langsung buka submenu Akademik
   int? _pendingAkademikIndex;
@@ -108,9 +113,36 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
     return NavScope(
       goToTab: _goToTab,
       goToAkademik: _goToAkademik,
-      child: Scaffold(
-        backgroundColor: AppColors.bg,
-        body: Stack(
+      child: PopScope(
+        canPop: false,
+        onPopInvokedWithResult: (bool didPop, dynamic result) {
+          if (didPop) return;
+          final ScaffoldState? scaffold = _scaffoldKey.currentState;
+          if (scaffold != null && scaffold.isDrawerOpen) {
+            scaffold.closeDrawer();
+            return;
+          }
+          if (_selectedIndex != 0) {
+            _goToTab(0);
+            return;
+          }
+          final DateTime now = DateTime.now();
+          if (_lastBackPressTime == null ||
+              now.difference(_lastBackPressTime!) > const Duration(seconds: 2)) {
+            _lastBackPressTime = now;
+            AppToast.showInfo(context, 'Tekan sekali lagi untuk keluar aplikasi');
+            return;
+          }
+          SystemNavigator.pop();
+        },
+        child: Scaffold(
+          key: _scaffoldKey,
+          backgroundColor: AppColors.bg,
+          drawer: AppDrawer(
+            user: widget.user,
+            currentRoute: '/',
+          ),
+          body: Stack(
           children: <Widget>[
             Positioned.fill(
               child: AnimatedSwitcher(
@@ -140,8 +172,9 @@ class _WelcomeScreenState extends State<WelcomeScreen> {
           ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 
   Widget _buildNav() {
     return Container(

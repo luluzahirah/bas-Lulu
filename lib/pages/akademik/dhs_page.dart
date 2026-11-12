@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../theme.dart';
 import '../../widgets.dart';
 import 'dhs_kuliah_page.dart';
+import 'khs_page.dart';
 import 'transkrip_page.dart';
 
 // ─── Data sub-menu DHS ────────────────────────────────────────────────────────
@@ -66,9 +67,16 @@ class DhsPage extends StatelessWidget {
     _DhsMenu(
       icon: Icons.playlist_add_check_outlined,
       title: 'Nilai Per Semester',
-      subtitle: 'Detail nilai tiap semester',
+      subtitle: 'Detail nilai tiap semester (KHS)',
       colors: AppColors.g3,
-      onTap: (BuildContext ctx) => _showComingSoon(ctx, 'Nilai Per Semester'),
+      onTap: (BuildContext ctx) {
+        final String targetNpm = npm ?? '12523030';
+        Navigator.of(ctx).push(
+          MaterialPageRoute<void>(
+            builder: (_) => KhsPage(npm: targetNpm),
+          ),
+        );
+      },
     ),
     _DhsMenu(
       icon: Icons.military_tech_outlined,

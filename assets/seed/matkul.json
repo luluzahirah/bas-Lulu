@@ -1,0 +1,86 @@
+[
+  {
+    "id": "1",
+    "kd_matkul": "GC327",
+    "nama_matkul": "Pemrograman Mobile",
+    "sks": 3,
+    "semester": 5
+  },
+  {
+    "id": "2",
+    "kd_matkul": "GC311",
+    "nama_matkul": "Desain UI/UX",
+    "sks": 3,
+    "semester": 5
+  },
+  {
+    "id": "3",
+    "kd_matkul": "GC319",
+    "nama_matkul": "Rekayasa Perangkat Lunak",
+    "sks": 3,
+    "semester": 5
+  },
+  {
+    "id": "4",
+    "kd_matkul": "GC330",
+    "nama_matkul": "Basis Data Lanjut",
+    "sks": 3,
+    "semester": 5
+  },
+  {
+    "id": "5",
+    "kd_matkul": "GC336",
+    "nama_matkul": "Jaringan Komputer",
+    "sks": 3,
+    "semester": 2
+  },
+  {
+    "id": "6",
+    "kd_matkul": "GC101",
+    "nama_matkul": "Algoritma & Pemrograman",
+    "sks": 3,
+    "semester": 1
+  },
+  {
+    "id": "7",
+    "kd_matkul": "GC102",
+    "nama_matkul": "Matematika Diskrit",
+    "sks": 2,
+    "semester": 1
+  },
+  {
+    "id": "8",
+    "kd_matkul": "GC103",
+    "nama_matkul": "Pengantar Teknologi Informasi",
+    "sks": 2,
+    "semester": 1
+  },
+  {
+    "id": "9",
+    "kd_matkul": "GC201",
+    "nama_matkul": "Struktur Data & Algoritma",
+    "sks": 3,
+    "semester": 2
+  },
+  {
+    "id": "10",
+    "kd_matkul": "GC202",
+    "nama_matkul": "Sistem Operasi",
+    "sks": 3,
+    "semester": 2
+  },
+  {
+    "id": "11",
+    "kd_matkul": "GC203",
+    "nama_matkul": "Pemrograman Berorientasi Objek",
+    "sks": 3,
+    "semester": 3
+  },
+  {
+    "id": "12",
+    "kd_matkul": "GC301",
+    "nama_matkul": "Kecerdasan Buatan",
+    "sks": 3,
+    "semester": 5
+  }
+]

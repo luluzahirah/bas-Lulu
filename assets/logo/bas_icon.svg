@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" fill="none">
+  <defs>
+    <linearGradient id="bas_icon_grad" x1="0" y1="0" x2="64" y2="64" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#2a4bc4" />
+      <stop offset="100%" stop-color="#12246b" />
+    </linearGradient>
+  </defs>
+
+  <!-- Rounded Box (radius 25% dari 64 = 16) dengan Gradasi #2a4bc4 ke #12246b -->
+  <rect x="0" y="0" width="64" height="64" rx="16" fill="url(#bas_icon_grad)" />
+
+  <!-- Alas Topi Putih Agak Transparan di Bawahnya -->
+  <path d="M20 30V37C20 43 25.5 46 32 46C38.5 46 44 43 44 37V30L32 36Z" fill="#FFFFFF" fill-opacity="0.82" />
+
+  <!-- Topi Toga Putih (Belah Ketupat di Atas) -->
+  <path d="M32 16L52 26L32 36L12 26Z" fill="#FFFFFF" />
+
+  <!-- Lingkaran Kecil Biru di Tengah Topi -->
+  <circle cx="32" cy="26" r="2.2" fill="#12246b" />
+
+  <!-- Tali / Kuncir Kuning #ffc83d di Sisi Kanan -->
+  <path d="M32 26C37 26 46 29 47 34C48 37 48 40 48 41" stroke="#ffc83d" stroke-width="1.8" stroke-linecap="round" fill="none" />
+
+  <!-- Bulatan di Ujung Tali Kuning -->
+  <circle cx="48" cy="42" r="2.4" fill="#ffc83d" />
+</svg>
